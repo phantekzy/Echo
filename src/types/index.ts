@@ -7,3 +7,8 @@ export const RegisterSchema = z.object({
 
   orgName: z.string().min(2, { message: "Organization name is too short" }),
 });
+
+export const LoginSchema = z.object({
+  email: z.email({ error: "Invalid Email format" }),
+  password: z.string(),
+});
