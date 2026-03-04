@@ -2,6 +2,7 @@ import {
   integer,
   pgEnum,
   pgTable,
+  primaryKey,
   serial,
   text,
   timestamp,
@@ -23,12 +24,18 @@ export const organizations = pgTable("organizations", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const memberships = pgTable("memberships", {
-  userId: integer("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  orgId: integer("org_id")
-    .notNull()
-    .references(() => organizations.id, { onDelete: "cascade" }),
-  role: roleEnum("role").default("MEMBER").notNull(),
-});
+export const memberships = pgTable(
+  "memberships",
+  {
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    orgId: integer("org_id")
+      .notNull()
+      .references(() => organizations.id, { onDelete: "cascade" }),
+    role: roleEnum("role").default("MEMBER").notNull(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.userId, t.orgId] }),
+  }),
+);
