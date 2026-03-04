@@ -12,3 +12,6 @@ export const LoginSchema = z.object({
   email: z.email({ error: "Invalid Email format" }),
   password: z.string(),
 });
+
+export type RegisterInput = z.infer<typeof RegisterSchema>;
+export type LoginInput = z.infer<typeof LoginSchema>;
