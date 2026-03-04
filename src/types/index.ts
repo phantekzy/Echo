@@ -1,15 +1,17 @@
-import z from "zod";
+import { z } from "zod";
+
 export const RegisterSchema = z.object({
-  email: z.email({ message: "Please enter a valid email" }),
+  email: z.email({ error: "Please enter a valid email" }),
+
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters" }),
+    .min(8, { error: "Password must be at least 8 characters" }),
 
-  orgName: z.string().min(2, { message: "Organization name is too short" }),
+  orgName: z.string().min(2, { error: "Organization name is too short" }),
 });
 
 export const LoginSchema = z.object({
-  email: z.email({ error: "Invalid Email format" }),
+  email: z.email({ error: "Invalid email format" }),
   password: z.string(),
 });
 
@@ -20,6 +22,6 @@ export interface AuthResponse {
   token: string;
   user: {
     id: number;
-    emai: string;
+    email: string;
   };
 }
