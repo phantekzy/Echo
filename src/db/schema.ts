@@ -35,7 +35,5 @@ export const memberships = pgTable(
       .references(() => organizations.id, { onDelete: "cascade" }),
     role: roleEnum("role").default("MEMBER").notNull(),
   },
-  (t) => ({
-    pk: primaryKey({ columns: [t.userId, t.orgId] }),
-  }),
+  (t) => [primaryKey({ columns: [t.userId, t.orgId] })],
 );
