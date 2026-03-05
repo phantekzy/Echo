@@ -11,7 +11,7 @@ export class AuthService {
         .insert(users)
         .values({
           email: data.email,
-          passwordHash: data.password,
+          passwordHash: hashedPassword,
         })
         .returning();
     });
