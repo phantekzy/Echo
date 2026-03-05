@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from "express";
-import { RegisterSchema } from "../types/index.js";
+import { LoginSchema, RegisterSchema } from "../types/index.js";
 import { AuthService } from "../services/auth.service.js";
 import z from "zod";
 
@@ -20,4 +20,9 @@ router.post("/register", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/login", async (req: Request, res: Response) => {});
+router.post("/login", async (req: Request, res: Response) => {
+  try {
+    const body = LoginSchema.parse(req.body);
+    const result = await AuthService.login(body);
+  } catch (error) {}
+});
