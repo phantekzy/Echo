@@ -43,4 +43,12 @@ export const files = pgTable("files", {
   fileName: text("file_name").notNull(),
   s3Key: text("s3_key").notNull().unique(),
   fileSize: integer("file_size").notNull(),
+  mimeType: text("mime_type").notNull(),
+  orgId: integer("org_id")
+    .notNull()
+    .references(() => organizations.id, { onDelete: "cascade" }),
+  uploadedBy: integer("uploaded_by")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
