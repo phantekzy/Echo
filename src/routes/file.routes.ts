@@ -2,6 +2,9 @@ import { Router, type Request, type Response } from "express";
 import multer from "multer";
 import { FileUploadSchema } from "../types/index.js";
 import { FileService } from "../services/file.service.js";
+import { db } from "../db/index.js";
+import { files } from "../db/schema.js";
+import { eq } from "drizzle-orm";
 
 const router = Router();
 
@@ -32,5 +35,11 @@ router.post(
 
 router.get(
   "/:id/download",
-  async (req: Request, res: Response): Promise<any> => {},
+  async (req: Request, res: Response): Promise<any> => {
+    const fileId = Number(req.params.id);
+    const [fileRecord] = await db
+      .select()
+      .from(files)
+      .where(eq(files.id, fileId));
+  },
 );
