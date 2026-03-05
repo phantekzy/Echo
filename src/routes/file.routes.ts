@@ -44,6 +44,7 @@ router.get(
         .where(eq(files.id, fileId));
       if (!fileRecord) return res.status(404).json({ error: "File not found" });
       const downloadUrl = await FileService.getPresignedUrl(fileRecord.s3Key);
+      res.json({ url: downloadUrl });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }
