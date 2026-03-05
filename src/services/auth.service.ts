@@ -1,12 +1,14 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { memberships, organizations, users } from "../db/schema.js";
+import jwt from "jsonwebtoken";
 import type {
   AuthResponse,
   LoginInput,
   RegisterInput,
 } from "../types/index.js";
 import * as argon2 from "argon2";
+import { email } from "zod";
 
 export class AuthService {
   static async register(data: RegisterInput) {
@@ -45,5 +47,10 @@ export class AuthService {
     if (!user || !argon2.verify(user.passwordHash, data.password)) {
       throw new Error("Invalid Email or password");
     }
+    const token = jwt.sign(
+      { userId: user.id, email: user.email },
+      process.env.JWT_SECRET!,
+      { expiresIn: "1d" },
+    );
   }
 }
