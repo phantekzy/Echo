@@ -38,6 +38,10 @@ router.get(
   async (req: Request, res: Response): Promise<any> => {
     try {
       const fileId = Number(req.params.id);
+      const [fileRecord] = await db
+        .select()
+        .from(files)
+        .where(eq(files.id, fileId));
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }
