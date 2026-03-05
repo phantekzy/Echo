@@ -1,6 +1,10 @@
 import { db } from "../db/index.js";
 import { memberships, organizations, users } from "../db/schema.js";
-import type { RegisterInput } from "../types/index.js";
+import type {
+  AuthResponse,
+  LoginInput,
+  RegisterInput,
+} from "../types/index.js";
 import * as argon2 from "argon2";
 
 export class AuthService {
@@ -33,4 +37,5 @@ export class AuthService {
       return { userId: newUser.id, orgId: newOrg.id };
     });
   }
+  static async login(data: LoginInput): Promise<AuthResponse> {}
 }
