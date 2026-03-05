@@ -52,5 +52,12 @@ export class AuthService {
       process.env.JWT_SECRET!,
       { expiresIn: "1d" },
     );
+    return {
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+      },
+    };
   }
 }
