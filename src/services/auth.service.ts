@@ -39,8 +39,11 @@ export class AuthService {
     });
   }
   static async login(data: LoginInput): Promise<AuthResponse> {
-    const user = await db.query.users.findMany({
+    const user = await db.query.users.findFirst({
       where: eq(users.email, data.email),
     });
+    if (!user || !argon2.verify(user.passwordHash, data.password)) {
+      throw new Error("Invalid Email or password");
+    }
   }
 }
