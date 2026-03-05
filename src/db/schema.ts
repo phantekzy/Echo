@@ -37,3 +37,5 @@ export const memberships = pgTable(
   },
   (t) => [primaryKey({ columns: [t.userId, t.orgId] })],
 );
+
+export const files = pgTable("files", {});
