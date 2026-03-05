@@ -38,4 +38,9 @@ export const memberships = pgTable(
   (t) => [primaryKey({ columns: [t.userId, t.orgId] })],
 );
 
-export const files = pgTable("files", {});
+export const files = pgTable("files", {
+  id: serial("id").primaryKey(),
+  fileName: text("file_name").notNull(),
+  s3Key: text("s3_key").notNull().unique(),
+  fileSize: integer("file_size").notNull(),
+});
