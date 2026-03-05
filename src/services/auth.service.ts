@@ -1,5 +1,5 @@
 import { db } from "../db/index.js";
-import { organizations, users } from "../db/schema.js";
+import { memberships, organizations, users } from "../db/schema.js";
 import type { RegisterInput } from "../types/index.js";
 import * as argon2 from "argon2";
 export class AuthService {
@@ -22,6 +22,12 @@ export class AuthService {
           slug: slug,
         })
         .returning();
+
+      await tx.insert(memberships).values({
+        userId: newUser.id,
+        orgId: newOrg.id,
+        role: "OWNER",
+      });
     });
   }
 }
