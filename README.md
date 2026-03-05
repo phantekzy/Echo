@@ -1,4 +1,4 @@
-# Echo Authentication Backend
+# Echo SaaS Authentication Backend
 
 A robust, multi-tenant authentication system built with TypeScript, Node.js, and PostgreSQL. This project implements a Service-Oriented Architecture (SOA) and Role-Based Access Control (RBAC) to handle complex user-organization relationships.
 
@@ -31,7 +31,7 @@ A robust, multi-tenant authentication system built with TypeScript, Node.js, and
 ## Installation
 
 1. Clone the repository:
-   git clone https://github.com/your-username/echo-saas.git
+   git clone https://github.com/phantekzy/Echo.git
 
 2. Install dependencies:
    npm install
@@ -40,11 +40,8 @@ A robust, multi-tenant authentication system built with TypeScript, Node.js, and
    Create a .env file in the root directory and provide the following:
    DATABASE_URL=postgres://username:password@localhost:5432/echo_db
    JWT_SECRET=your_jwt_secret_key
-   PORT=6969
 
 ## Database Management
-
-
 
 This project uses Drizzle Kit for schema synchronization.
 
