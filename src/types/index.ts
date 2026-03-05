@@ -25,3 +25,9 @@ export interface AuthResponse {
     email: string;
   };
 }
+
+export const FileUploadSchema = z.object({
+  orgId: z.coerce.number().positive("Invalid Organization ID"),
+});
+
+export type FileUploadInput = z.infer<typeof FileUploadSchema>;
