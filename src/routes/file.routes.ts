@@ -42,6 +42,7 @@ router.get(
         .select()
         .from(files)
         .where(eq(files.id, fileId));
+      if (!fileRecord) return res.status(404).json({ error: "File not found" });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }
