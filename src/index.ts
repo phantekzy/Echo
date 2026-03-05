@@ -1,6 +1,7 @@
 import express from "express";
 import "dotenv/config";
 import authRoutes from "./routes/auth.routes.js";
+import fileRoutes from "./routes/file.routes.js";
 import cors from "cors";
 
 const app = express();
@@ -10,6 +11,7 @@ app.use("/api/auth", authRoutes);
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
 });
+app.use("/api/files", fileRoutes);
 
 const PORT = process.env.PORT || 3000;
 
