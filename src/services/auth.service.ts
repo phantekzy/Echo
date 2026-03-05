@@ -28,6 +28,7 @@ export class AuthService {
         orgId: newOrg.id,
         role: "OWNER",
       });
+      return { userId: newUser.id, orgId: newOrg.id };
     });
   }
 }
