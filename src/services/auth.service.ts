@@ -1,5 +1,5 @@
 import { db } from "../db/index.js";
-import { users } from "../db/schema.js";
+import { organizations, users } from "../db/schema.js";
 import type { RegisterInput } from "../types/index.js";
 import * as argon2 from "argon2";
 export class AuthService {
@@ -12,6 +12,14 @@ export class AuthService {
         .values({
           email: data.email,
           passwordHash: hashedPassword,
+        })
+        .returning();
+
+      const [newOrg] = await tx
+        .insert(organizations)
+        .values({
+          name: data.orgName,
+          slug: slug,
         })
         .returning();
     });
