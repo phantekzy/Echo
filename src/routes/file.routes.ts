@@ -36,10 +36,10 @@ router.post(
 router.get(
   "/:id/download",
   async (req: Request, res: Response): Promise<any> => {
-    const fileId = Number(req.params.id);
-    const [fileRecord] = await db
-      .select()
-      .from(files)
-      .where(eq(files.id, fileId));
+    try {
+      const fileId = Number(req.params.id);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
   },
 );
