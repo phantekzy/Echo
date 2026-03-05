@@ -19,3 +19,5 @@ router.post("/register", async (req: Request, res: Response) => {
     res.status(400).json({ error: err.message });
   }
 });
+
+router.post("/login", async (req: Request, res: Response) => {});
