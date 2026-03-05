@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { memberships, organizations, users } from "../db/schema.js";
 import type {
@@ -37,5 +38,9 @@ export class AuthService {
       return { userId: newUser.id, orgId: newOrg.id };
     });
   }
-  static async login(data: LoginInput): Promise<AuthResponse> {}
+  static async login(data: LoginInput): Promise<AuthResponse> {
+    const user = await db.query.users.findMany({
+      where: eq(users.email, data.email),
+    });
+  }
 }
