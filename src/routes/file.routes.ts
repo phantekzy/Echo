@@ -19,6 +19,12 @@ router.post(
       const { orgId } = FileUploadSchema.parse(req.body);
       const userId = Number(req.body.userId);
       const savedFile = await FileService.uploadFile(req.file, orgId, userId);
-    } catch (error) {}
+      res.status(200).json({
+        message: "File uploaded and secured",
+        file: savedFile,
+      });
+    } catch (err: any) {
+      res.status(400).json({ error: err.message });
+    }
   },
 );
