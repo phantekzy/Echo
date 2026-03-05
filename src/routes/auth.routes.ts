@@ -24,5 +24,14 @@ router.post("/login", async (req: Request, res: Response) => {
   try {
     const body = LoginSchema.parse(req.body);
     const result = await AuthService.login(body);
-  } catch (error) {}
+    res.json(result);
+  } catch (err: any) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({
+        error: "Login Error",
+        details: err.issues.map((issue) => issue.message),
+      });
+    }
+    res.status(401).json({ error: err.message });
+  }
 });
