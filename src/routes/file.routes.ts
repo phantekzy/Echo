@@ -1,6 +1,7 @@
 import { Router, type Request, type Response } from "express";
 import multer from "multer";
 import { FileUploadSchema } from "../types/index.js";
+import { FileService } from "../services/file.service.js";
 
 const router = Router();
 
@@ -16,6 +17,8 @@ router.post(
     try {
       if (!req.file) return res.status(400).json({ error: "No file provided" });
       const { orgId } = FileUploadSchema.parse(req.body);
+      const userId = Number(req.body.userId);
+      const savedFile = await FileService.uploadFile(req.file, orgId, userId);
     } catch (error) {}
   },
 );
