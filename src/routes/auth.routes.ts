@@ -13,7 +13,7 @@ router.post("/register", async (req: Request, res: Response) => {
     if (err instanceof z.ZodError) {
       return res.status(400).json({
         error: "Validation Failed",
-        details: err.issues.map((issue: z.ZodIssue) => issue.message),
+        details: err.issues.map((issue) => issue.message),
       });
     }
     res.status(400).json({ error: err.message });
