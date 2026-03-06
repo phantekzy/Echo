@@ -1,71 +1,61 @@
-# Echo SaaS Authentication Backend
+# Echo Project Documentation
 
-A robust, multi-tenant authentication system built with TypeScript, Node.js, and PostgreSQL. This project implements a Service-Oriented Architecture (SOA) and Role-Based Access Control (RBAC) to handle complex user-organization relationships.
+## Project Overview
+Echo is a modular monolith application designed to provide a secure, multi-tenant environment for organization management and file storage. The system is built with a focus on type safety, scalability, and local-first development infrastructure.
 
-## Core Features
+## Core Architecture
+The application follows a Service-Repository pattern within an Express.js framework, utilizing TypeScript for end-to-end type safety.
 
-- Multi-tenancy: Users can belong to multiple organizations with specific roles.
-- Role-Based Access Control (RBAC): Preset roles (OWNER, ADMIN, MEMBER) managed via PostgreSQL Enums.
-- Secure Authentication: Password hashing using the Argon2 algorithm.
-- Database Transactions: Atomic registration flow ensuring data integrity across Users, Organizations, and Memberships.
-- Type Safety: End-to-end typing using TypeScript and Zod for runtime validation.
-- Modern Tooling: Database management with Drizzle ORM and Drizzle Kit.
+### 1. Identity and Access Management (IAM)
+The project implements a multi-tenant hierarchy:
+- Organizations: The top-level entity representing a company or group.
+- Users: Individual accounts that can belong to one or multiple organizations.
+- Memberships: A relational table that handles the many-to-many relationship between users and organizations, ensuring strict data isolation.
+
+### 2. Echo Drive (File Storage Extension)
+The file storage system is designed to be compatible with Amazon S3 but runs locally for development.
+- Object Storage: Powered by MinIO running in a Podman container.
+- Metadata Management: File details (size, mime-type, original name) are stored in PostgreSQL via Drizzle ORM.
+- Security: Files are stored using a UUID-based key system to prevent collisions and are accessed via time-limited presigned URLs.
 
 ## Technical Stack
-
-- Runtime: Node.js (ES Modules)
+- Backend: Node.js with Express.js
 - Language: TypeScript
-- Framework: Express.js
 - Database: PostgreSQL
 - ORM: Drizzle ORM
+- File Handling: Multer (Memory Storage)
+- Storage Engine: MinIO (S3 Compatible)
+- Infrastructure: Podman (Fedora-native containerization)
 - Validation: Zod
-- Security: Argon2, JSON Web Tokens (JWT)
 
-## Project Structure
+## Infrastructure Setup
 
-- src/db: Database connection and schema definitions.
-- src/services: Business logic and database interaction.
-- src/routes: API endpoint definitions.
-- src/types: TypeScript interfaces and Zod validation schemas.
+### Storage Engine
+The storage engine is containerized to ensure environmental consistency.
+- Port 9000: API communication.
+- Port 9001: Web Console for administrative tasks.
+- Persistence: Data is mapped to the host directory ~/minio_data with SELinux labeling (:Z) enabled for Fedora compatibility.
 
-## Installation
+### Database Schema
+The relational schema includes:
+- Users table for authentication.
+- Organizations table for multi-tenancy.
+- Files table for object metadata tracking, including foreign key constraints linking files to their respective owners and organizations.
 
-1. Clone the repository:
-   git clone https://github.com/phantekzy/Echo.git
+## Security Implementation
+1. UUID Obfuscation: Physical filenames are never stored on disk. Instead, a Version 4 UUID is generated for every upload.
+2. Path Isolation: Files are prefixed with the Organization ID in the storage bucket to provide logical partitioning of data.
+3. Presigned URLs: Direct access to the storage bucket is blocked. Users must request a temporary, signed URL from the Echo API to view or download content.
 
-2. Install dependencies:
-   npm install
+## Development Environment
+To maintain the project on Fedora:
+1. Ensure the PostgreSQL service is active: sudo systemctl start postgresql.
+2. Ensure the MinIO container is active: podman start echo-storage.
+3. Synchronize database changes: npx drizzle-kit push.
+4. Execute the development server: npm run dev.
 
-3. Configure environment variables:
-   Create a .env file in the root directory and provide the following:
-   DATABASE_URL=postgres://username:password@localhost:5432/echo_db
-   JWT_SECRET=your_jwt_secret_key
+## API Specification
+- POST /api/auth: Handles user registration and organizational onboarding.
+- POST /api/files/upload: Accepts multipart/form-data for object storage.
+- GET /api/files/:id/download: Generates a temporary S3 presigned URL for secure retrieval.
 
-## Database Management
-
-This project uses Drizzle Kit for schema synchronization.
-
-Push schema to database:
-npx drizzle-kit push
-
-Open Drizzle Studio (Database GUI):
-npx drizzle-kit studio
-
-## API Endpoints
-
-### Authentication
-
-POST /api/auth/register
-Registers a new user, creates their primary organization, and assigns the OWNER role within a single transaction.
-
-POST /api/auth/login
-Authenticates a user and returns a JWT for subsequent requests.
-
-## Development
-
-To start the development server with hot-reloading:
-npm run dev
-
-## License
-
-MIT
